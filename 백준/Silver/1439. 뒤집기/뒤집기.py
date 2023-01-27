@@ -1,20 +1,18 @@
-arr = input()
+line = list(map(int, input()))
 
-change_zero = 0
-change_one = 0
+zero_cnt = 0
+one_cnt = 0
 
-if arr[0] == '0':
-    change_one += 1
-else:
-    change_zero += 1
+if line[0] == 0:
+    zero_cnt += 1
+if line[0] == 1:
+    one_cnt += 1
 
-for i in range(len(arr) - 1):
-    if arr[i] != arr[i+1]:
-        if arr[i+1] == '0':
-            change_one += 1
+for i in range(len(line) - 1):
+    if line[i] != line[i + 1]:
+        if line[i + 1] == 0:
+            zero_cnt += 1
         else:
-            change_zero += 1
+            one_cnt += 1
 
-result = min(change_one, change_zero)
-
-print(result)
+print(min(zero_cnt, one_cnt))

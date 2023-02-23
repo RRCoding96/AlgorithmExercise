@@ -28,30 +28,19 @@ a, b = map(int, input().split())
 ans_left = 0
 ans_right = 0
 
-# while True:
-#
-#     if a == 1 and b == 1:
-#         break
-#
-#     if a < b:
-#         ans_right += 1
-#         a = a
-#         b = b - a
-#     elif a > b:
-#         ans_left += 1
-#         a = a - b
-#         b = b
+while True:
 
-while a > 1 and b > 1:
-    if a > b:
-        ans_left += a // b
-        a %= b
-    else:
-        ans_right += b // a
-        b %= a
+    if a == 1 and b == 1:
+        break
 
-ans_left += a - 1
-ans_right += b - 1
+    if a < b:
+        ans_right += 1
+        a = a
+        b = b - a
+    elif a > b:
+        ans_left += 1
+        a = a - b
+        b = b
 
 
 print(ans_left, ans_right)

@@ -43,18 +43,7 @@ def reverse_dir(direction):
         return 3
 
 
-# def blue_plate(now_x, now_y, direction):
-#     rev_dir = reverse_dir(direction)
-#
-#     nx = now_x + dx[rev_dir]
-#     ny = now_y + dy[rev_dir]
-#
-#     if nx < 0 or ny < 0 or nx >= N or ny >= N or board[nx][ny] == 2:
-#         return now_x, now_y, reverse_dir(rev_dir)
-#
-#     return nx, ny, rev_dir
-
-
+# 파란색이거나 벗어난 칸이라서 반대로 이동해봤는데 또 그런 상태인지 확인하는 함수
 def is_blue_again(x, y, direction):
     rev_dir = reverse_dir(direction)
     nnx = x + dx[rev_dir]
@@ -65,43 +54,48 @@ def is_blue_again(x, y, direction):
     return False
 
 
+# 다음 칸으로 이동시키는 함수
 def move_next_pos(x, y, direction):
     nx = x + dx[direction]
     ny = y + dy[direction]
 
-    # 판을 벗어나는 경우 or 파란칸
+    # 다음 칸이 판을 벗어나는 경우 or 파란칸
     if nx < 0 or ny < 0 or nx >= N or ny >= N or board[nx][ny] == 2:
-        # new_x, new_y, new_dir = blue_plate(x, y, direction)
         # 또 벗어나거나 파란칸이면 이동 안하고 방향만 반대로
         if is_blue_again(x, y, direction):
             return x, y, reverse_dir(direction)
         else:
             rev_dir = reverse_dir(direction)
+            # 방향 바꿔서 이동한 칸의 색깔 별로 다시 처리해주기 위해 현재 함수 재귀 호출
             return move_next_pos(x, y, rev_dir)
 
-    # 빨강칸
+    # 다음 칸이 빨강칸
     elif board[nx][ny] == 1:
+        # 말 반대로 바꿔줌
         rev_horses = record[x][y][::-1]
-
+        # 말들 차례로 다음 칸에 올림
         for value in rev_horses:
             record[nx][ny].append(value)
+            # 말들 정보 갱신
             h_n, x, y, d = horses_info[value]
             horses_info[value] = [h_n, nx, ny, d]
-
+        # 이전 칸에 있던 말을 모두 옮겼으므로 빈 칸으로 만들어 줌
         record[x][y] = []
-    # 흰칸
+    # 다음 칸이 흰칸
     elif board[nx][ny] == 0:
-
+        # 말들 차례로 다음 칸에 올림
         for value in record[x][y]:
             record[nx][ny].append(value)
+            # 말들 정보 갱신
             h_n, x, y, d = horses_info[value]
             horses_info[value] = [h_n, nx, ny, d]
-
+        # 이전 칸에 있던 말을 모두 옮겼으므로 빈 칸으로 만들어 줌
         record[x][y] = []
 
     return nx, ny, direction
 
 
+# 현재 턴에 모든 말들 이동시키는 함수
 def move_all_horses():
     for horse in range(1, K + 1):
         horse_num, r, c, direction = horses_info[horse]
@@ -109,8 +103,12 @@ def move_all_horses():
         if not is_bottom_horse(horse_num, r, c):
             continue
 
+        # 현재 말 기준으로 옮기기 수행
         nx, ny, n_dir = move_next_pos(r, c, direction)
+        # 말 정보
         horses_info[horse_num] = [horse_num, nx, ny, n_dir]
+
+
 
 
 def is_finish():

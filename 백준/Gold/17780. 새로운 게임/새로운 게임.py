@@ -4,25 +4,25 @@ import sys
 dx = [0, 0, 0, -1, 1]
 dy = [0, 1, -1, 0, 0]
 
+# 보드 크기, 말 개수
 N, K = map(int, sys.stdin.readline().rstrip().split())
-# 0: 흰, 1: 빨, 2: 파
+# 0: 흰, 1: 빨, 2: 파 -> 기록한 보드
 board = [list(map(int, sys.stdin.readline().rstrip().split())) for _ in range(N)]
 
-# 말 위치 기록
+# 말 위치 기록(겹쳐진 말 포함)
 record = [[[] for _ in range(N)] for _ in range(N)]
 
+# 말 번호 별 위치, 방향 기록할 배열
 horses_info = [[] for _ in range(K + 1)]
 for i in range(1, K + 1):
     r, c, direction = map(int, sys.stdin.readline().rstrip().split())
     # 말 번호, 행, 열, 방향
     horses_info[i] = [i, r - 1, c - 1, direction]
+    # 말 위치 기록(겹쳐지게)
     record[r - 1][c - 1].append(i)
 
-# print(*board, sep='\n')
-# print(*horses_info, sep='\n')
-# print(*record, sep='\n')
 
-
+# 가장 밑에 있는 말인지 확인하는 함수 (이동시키려는 말이 가장 밑에 있어야 이동시킬 수 있음)
 def is_bottom_horse(h_num, x, y):
     horse_state = record[x][y]
     if horse_state[0] == h_num:
@@ -31,6 +31,7 @@ def is_bottom_horse(h_num, x, y):
         return False
 
 
+# 방향 반대로 바꾸는 함수
 def reverse_dir(direction):
     if direction == 1:
         return 2
@@ -42,16 +43,16 @@ def reverse_dir(direction):
         return 3
 
 
-def blue_plate(now_x, now_y, direction):
-    rev_dir = reverse_dir(direction)
-
-    nx = now_x + dx[rev_dir]
-    ny = now_y + dy[rev_dir]
-
-    if nx < 0 or ny < 0 or nx >= N or ny >= N or board[nx][ny] == 2:
-        return now_x, now_y, reverse_dir(rev_dir)
-
-    return nx, ny, rev_dir
+# def blue_plate(now_x, now_y, direction):
+#     rev_dir = reverse_dir(direction)
+#
+#     nx = now_x + dx[rev_dir]
+#     ny = now_y + dy[rev_dir]
+#
+#     if nx < 0 or ny < 0 or nx >= N or ny >= N or board[nx][ny] == 2:
+#         return now_x, now_y, reverse_dir(rev_dir)
+#
+#     return nx, ny, rev_dir
 
 
 def is_blue_again(x, y, direction):
@@ -76,17 +77,8 @@ def move_next_pos(x, y, direction):
             return x, y, reverse_dir(direction)
         else:
             rev_dir = reverse_dir(direction)
-
             return move_next_pos(x, y, rev_dir)
 
-            # nx = x + dx[rev_dir]
-            # ny = y + dy[rev_dir]
-            # for value in record[x][y]:
-            #     record[nx][ny].append(value)
-            #     h_n, x, y, d = horses_info[value]
-            #     horses_info[value] = [h_n, nx, ny, d]
-            # record[x][y] = []
-            # return nx, ny, direction
     # 빨강칸
     elif board[nx][ny] == 1:
         rev_horses = record[x][y][::-1]
@@ -120,9 +112,6 @@ def move_all_horses():
         nx, ny, n_dir = move_next_pos(r, c, direction)
         horses_info[horse_num] = [horse_num, nx, ny, n_dir]
 
-        # print(*record, sep='\n')
-        # print(*horses_info, sep='\n')
-
 
 def is_finish():
     for i in range(N):
@@ -135,7 +124,6 @@ def is_finish():
 answer = -1
 time = 1
 while time <= 1000:
-    # print('time: ', time)
     move_all_horses()
 
     if is_finish():

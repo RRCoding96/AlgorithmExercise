@@ -16,48 +16,43 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		
+		// 수 입력
 		arr = new int[N];
 		for(int i = 0; i < N; i++) {
 			arr[i] = Integer.parseInt(br.readLine());
 		}
 		
 		Arrays.sort(arr);
-		answer = Integer.MAX_VALUE;
 		
-		for(int i = 0; i < N; i++) {
-			int target = arr[i] + M;
-			if(target > arr[N - 1]) break;
-			
-			binarySearch(i, target);
-			
-			if(answer == M) {
+		int answer = Integer.MAX_VALUE;
+		
+//		int s = 0;
+//		int e = 0;
+//		while(e < N && s <= e) {
+//			int rst = arr[e] - arr[s];
+//			if(rst >= M) {
+//				s++;
+//				answer = Math.min(answer, rst);
+//			} else {
+//				e++;
+//			}
+//		}
+		
+		int e = 0;
+		for(int s = 0; s < N; s++) {
+			while(e < N && arr[e] - arr[s] < M) {
+				e++;
+			}
+			if(e == N) {
 				break;
 			}
+			answer = Math.min(answer, arr[e] - arr[s]);
 		}
+		
 		
 		System.out.println(answer);
+		
 	}
 	
-	static void binarySearch(int start, int target) {
-		int s = start;
-		int e = N;
-		
-		while(s < e) {
-			int mid = (s + e) / 2;
-			
-			if(arr[mid] - arr[start] < M) {
-				s = mid + 1;
-			} else {
-				e = mid;
-			}
-		}
-		
-		if(e == N) {
-			return;
-		}
-		
-		answer = Math.min(answer, arr[e] - arr[start]);
-		
-	}
 
 }

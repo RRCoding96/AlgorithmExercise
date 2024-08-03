@@ -44,7 +44,7 @@ public class Main {
     static boolean binarySearch(int target) {
         int s = 0;
         int e = N - 1;
-
+        
         while(s <= e) {
             int mid = (s + e) / 2;
             int num = cards[mid];
@@ -56,7 +56,7 @@ public class Main {
                 e = mid - 1;
             }
         }
-
+        
         return false;
     }
 

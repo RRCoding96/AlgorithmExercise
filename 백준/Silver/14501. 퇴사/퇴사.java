@@ -1,45 +1,51 @@
-
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	static int N;
-	static int[][] schedule;
-	static int result;
-    
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		N = Integer.parseInt(br.readLine()); // N까지만 일 함
-		schedule = new int[N][2];
-		for(int i=0; i<N; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-			schedule[i][0] = Integer.parseInt(st.nextToken()); // 상담 하는데 걸리는 일 수
-			schedule[i][1] = Integer.parseInt(st.nextToken()); // 돈
-		}
-		
-		result = 0;
-		// 0일 부터 시작함
-		dfs(0, 0);
-		
-		System.out.println(result);
-	}
-	
-	static void dfs(int idx, int pay) {
-		if(idx >= N) {
-			result = Math.max(pay, result);
-			return;
-		}
-		
-		if(idx + schedule[idx][0] <= N) { // 상담을 끝마칠 수 있다면 -> 상담이 끝난 날짜와 상담비 넣음
-			dfs(idx + schedule[idx][0], pay + schedule[idx][1]);
-		} else { // 상담을 끝마칠 수 없다면 -> 상담이 끝난 날짜만 넘겨준다(탈출 조건으로 써먹음)
-			dfs(idx + schedule[idx][0], pay);
-		}
-		
-		// 이어서 상담하지 않고 날짜를 띄워서 새로운 날짜를 입력 (0일부터 마지막 날짜까지 다 훑을 수 있음)
-		dfs(idx + 1, pay);
-	}
-	
+    private static int maxPay;
+    private static int[][] inputs;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        int N = Integer.parseInt(br.readLine());
+        inputs = new int[N + 1][2];
+        for(int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            int t = Integer.parseInt(st.nextToken());
+            int p = Integer.parseInt(st.nextToken());
+
+            inputs[i][0] = t;
+            inputs[i][1] = p;
+        }
+
+        maxPay = Integer.MIN_VALUE;
+        // 0일 부터 시작
+        bt(N, 0, 0);
+
+        System.out.println(maxPay);
+    }
+
+    private static void bt(int limit, int day, int pay) {
+        // 날짜 넘어가면 종료
+        if(day >= limit) {
+            maxPay = Math.max(maxPay, pay);
+            return;
+        }
+
+        // 상담 끝낼 수 있음 -> 돈 더해줌
+        if(day + inputs[day][0] <= limit) {
+            bt(limit, day + inputs[day][0], pay + inputs[day][1]);
+        } 
+        // 상담 끝낼 수 없음 -> 돈 못 범, 넘어가서 종료 조건에 걸림
+        else {
+            bt(limit, day + inputs[day][0], pay);
+        }
+        
+        // 상담 안하고 하루씩 넘어가는 경우
+        bt(limit, day + 1, pay);
+    }
+
 }

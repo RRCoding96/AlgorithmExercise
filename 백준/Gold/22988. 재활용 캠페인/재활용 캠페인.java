@@ -26,7 +26,7 @@ public class Main {
         int e = 0;
         for(int i = N - 1; i >= 0; i--) {
             // 큰 것부터 세면서 X 크기인 것 체크
-            if(arr[i] == X) {
+            if(arr[i] >= X) {
                 answer++;
                 N--; // X 크기인 것은 뺌
             } else {

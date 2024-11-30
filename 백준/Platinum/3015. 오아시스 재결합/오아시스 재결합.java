@@ -22,28 +22,28 @@ public class Main {
                 answer += deque.pollLast()[1];
             }
 
-            // 여기 아래부터는 현재 키보다 크거나 같은 경우만 있음
-
             // 덱이 비어있으면 현재 키를 넣어줌(매칭할 게 없기 때문)
             if(deque.isEmpty()) {
                 deque.addLast(new int[]{arr[i], 1});
-            } else {
-                // 덱에 키가 있을 때
+                continue;
+            }
 
-                // 가장 가까운 키가 현재 키보다 크면
-                // 매칭 수 + 1 (바로 마주볼 수 있기 때문)
-                // 덱에 현재 키 넣어줌 (뒤에 올 키가 나도 볼 수 있고 바로 앞의 큰 키도 볼 수 있기 때문)
-                if(deque.peekLast()[0] > arr[i]) {
-                    deque.addLast(new int[]{arr[i], 1});
+            // 여기 아래부터는 현재 키보다 크거나 같은 경우만 있음
+
+            // 덱에 키가 있을 때
+            // 가장 가까운 키가 현재 키보다 크면
+            // 매칭 수 + 1 (바로 마주볼 수 있기 때문)
+            // 덱에 현재 키 넣어줌 (뒤에 올 키가 나도 볼 수 있고 바로 앞의 큰 키도 볼 수 있기 때문)
+            if(deque.peekLast()[0] > arr[i]) {
+                deque.addLast(new int[]{arr[i], 1});
+                answer++;
+            } else if(deque.peekLast()[0] == arr[i]) {
+                // 가장 가까운 키 == 현재 키
+                // 가장 가까운 키의 카운트 값을 더해주고, 1 증가시킴
+                answer += deque.peekLast()[1]++;
+                // 덱의 크기가 2 이상이면, 매칭 수 + 1
+                if(deque.size() > 1) {
                     answer++;
-                } else if(deque.peekLast()[0] == arr[i]) {
-                    // 가장 가까운 키 == 현재 키
-                    // 가장 가까운 키의 카운트 값을 더해주고, 1 증가시킴
-                    answer += deque.peekLast()[1]++;
-                    // 덱의 크기가 2 이상이면, 매칭 수 + 1
-                    if(deque.size() > 1) {
-                        answer++;
-                    }
                 }
             }
         }

@@ -28,7 +28,7 @@ public class Main {
                 minDiff = Math.abs(midValue);
             }
 
-            if(midValue > 0) {
+            if(midValue >= 0) {
                 end--;
             } else {
                 start++;
